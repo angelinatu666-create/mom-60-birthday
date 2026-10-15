@@ -88,6 +88,15 @@
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
   .chip{font-size:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;
     padding:3px 10px;color:#4b4363}
+  /* ---------- 菜单卡 ---------- */
+  .menu-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;
+    box-shadow:var(--shadow)}
+  .menu-head{font-size:13.5px;color:#5c5177;font-weight:600;margin-bottom:12px;
+    padding-bottom:10px;border-bottom:1px dashed var(--border)}
+  .dishes{display:flex;flex-wrap:wrap;gap:8px}
+  .dish{font-size:13px;background:linear-gradient(135deg,#f7f3ff,#ede2fb);border:1px solid var(--border);
+    border-radius:10px;padding:6px 12px;color:#4b4363}
+  .empty-menu{display:block;font-size:13px;color:var(--muted)}
   /* ---------- 首页 Hero（提取效果图配色：浅紫 + 金 + 仙鹤） ---------- */
   header.hero{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--border);
     min-height:300px;display:flex;align-items:flex-end;box-shadow:var(--shadow);
@@ -124,7 +133,7 @@
   <footer><span>单文件看板 · 数据在 <code>data.js</code>，改完刷新即可</span>
     <span>家人协作：待办项可在群里接龙</span></footer>
 </div>
-<script src="data.js?v=20261015b"></script>
+<script src="data.js?v=20261015c"></script>
 <script>
 const D = window.BOARD, $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -147,15 +156,16 @@ const badge = st => st==='confirmed'?'<span class="badge ok">已定</span>'
   const guests = D.guestGroups.reduce((a,g)=>a+(+g.count||0),0);
   const rooms = D.hotels.reduce((a,h)=>a+(+h.rooms||0),0);
   const gapN = D.onsite.filter(o=>o.status==='gap').length
-             + D.hotels.filter(h=>h.status==='gap').length;
+             + D.hotels.filter(h=>h.status==='gap').length
+             + [D.satLunchMenu,D.satDinnerMenu].filter(m=>m && (!m.dishes || !m.dishes.length)).length;
   const f = D.finance;
   const spent = (f.spent||[]).reduce((a,b)=>a+((+b.unit||0)*(+b.qty||0)),0);
   const k = [
-    {k:'周六中午', v:hc.satLunch, u:'人', d:'另：周五 中午'+hc.friLunch+' + 晚'+hc.friDinner+' 人次'},
+    {k:'周六中午', v:hc.satLunch, u:'人', d:'龙溪谷现代农庄 · 另周五 中午'+hc.friLunch+' + 晚'+hc.friDinner+' 人次'},
     {k:'周六晚上', v:hc.satDinner, u:'人', d:'含浦集市聚餐'},
     {k:'迎接批次', v:D.guestGroups.length, u:'批', d:guests+' 人次统计'},
     {k:'住宿房间', cls:'gold', v:rooms, u:'间', d:'橘籽6 + 十里天池4'},
-    {k:'待办缺口', v:gapN, u:'项', d:'现场安排 + 住宿待定'}
+    {k:'待办缺口', v:gapN, u:'项', d:'现场安排 + 菜单待录入'}
   ];
   $('#kpis').innerHTML = k.map(x=>`<div class="kpi ${x.cls||''}"><div class="k">${esc(x.k)}</div>
     <div class="v">${esc(x.v)}<small> ${esc(x.u)}</small></div><div class="d">${esc(x.d)}</div></div>`).join('');
@@ -208,8 +218,21 @@ function panelCater(){
     <span class="r-by">${esc(x.detail||'')}</span>${badge(x.status)}</div>`).join('');
   const tr = D.transport.map(x=>`<div class="row"><span class="r-item">${esc(x.item)}</span>
     <span class="r-qty">${esc(x.detail||'')}</span><span class="r-by">${x.by?'车：'+esc(x.by):''}</span>${badge(x.status)}</div>`).join('');
+
+  const menuBlock = (m, title) => {
+    if(!m) return '';
+    const body = (m.dishes && m.dishes.length)
+      ? `<div class="dishes">${m.dishes.map(d=>`<span class="dish">${esc(d)}</span>`).join('')}</div>`
+      : `<div class="dishes empty-menu"><span class="tbd">菜单待录入</span>${m.note?' · '+esc(m.note):''}</div>`;
+    const head = `${esc(m.venue)}${m.tables?' · '+m.tables+'桌':''}${m.price?' · '+m.price+'元/桌':''}`;
+    return `<h2 class="sec">${title}</h2>
+      <div class="menu-card"><div class="menu-head">${head}</div>${body}</div>`;
+  };
+
   return `<section class="panel" data-p="cater"><h2 class="sec">餐饮 / 菜品</h2><div class="rows">${cat}</div>
-    <h2 class="sec">交通</h2><div class="rows">${tr}</div></section>`;
+    <h2 class="sec">交通 / 接送</h2><div class="rows">${tr}</div>
+    ${menuBlock(D.satLunchMenu,'周六中午菜单')}
+    ${menuBlock(D.satDinnerMenu,'周六晚上菜单')}</section>`;
 }
 function panelOnsite(){
   const rows = D.onsite.map(o=>`<div class="row"><span class="r-item">${esc(o.item)}</span>

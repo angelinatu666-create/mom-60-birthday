@@ -28,28 +28,26 @@ window.BOARD = {
     { name: "大舅一行", count: 4, members: ["大舅","杨华","汪丽","廖三"],
       arrive: "周五中午起 / 全时段", status: "confirmed", note: "" },
     { name: "飞机", count: 7, members: ["冯小刚","莎莎","孟君孃孃","大姑爷","二娘","涂径","曹三"],
-      arrive: "周五中午 / 周六中午", status: "confirmed", note: "周五中午即到" },
+      arrive: "周五早上 8 点多到", status: "confirmed", note: "直接坐地铁，到【阳光地铁站】接" },
     { name: "我伯父", count: 5, members: ["大伯","大伯娘","小姑","大姑","老爸"],
-      arrive: "周六中午", status: "confirmed", note: "" },
+      arrive: "周六中午", status: "confirmed", note: "含老爸" },
     { name: "王娟", count: 2, members: ["王娟等2人"],
       arrive: "周六中午", status: "confirmed", note: "" },
     { name: "罗平", count: 2, members: ["罗平等2人"],
       arrive: "周六中午", status: "confirmed", note: "" },
     { name: "俊红", count: 1, members: ["俊红"],
-      arrive: "周六中午 / 周六晚上", status: "confirmed", note: "住宿是否安排？" },
+      arrive: "周六中午 / 周六晚上", status: "confirmed", note: "住宿已安排：十里天池" },
     { name: "二姨妈", count: 1, members: ["二姨妈（朱二姐）"],
-      arrive: "周六中午 / 周六晚上", status: "confirmed", note: "" },
-    { name: "老爸", count: 1, members: ["老爸"],
-      arrive: "周六晚上", status: "confirmed", note: "仅晚上计入" },
+      arrive: "周五早上", status: "confirmed", note: "需到【火车站】接" },
     { name: "家里已有", count: 9, members: ["家中常驻9人"],
       arrive: "全时段", status: "confirmed", note: "周五至周六每天均计" }
   ],
 
   // ---------- 各餐次人数构成（用于核对） ----------
   meals: [
-    { day: "周五", meal: "中午", total: 20, parts: "飞机7 + 大舅4 + 家里9", note: "" },
-    { day: "周五", meal: "晚上", total: 25, parts: "飞机7 + 大舅4 + 家里9 + 二叔车5", note: "" },
-    { day: "周六", meal: "中午", total: 36, parts: "二叔车5 + 大舅4 + 飞机7 + 伯父5 + 王娟2 + 罗平2 + 俊红1 + 二姨妈1 + 家里9", note: "用车5辆" },
+    { day: "周五", meal: "中午", total: 20, parts: "飞机7 + 大舅4 + 家里9", note: "用餐地点：暂定家里" },
+    { day: "周五", meal: "晚上", total: 25, parts: "飞机7 + 大舅4 + 家里9 + 二叔车5", note: "用餐地点：暂定家里" },
+    { day: "周六", meal: "中午", total: 36, parts: "二叔车5 + 大舅4 + 飞机7 + 伯父5 + 王娟2 + 罗平2 + 俊红1 + 二姨妈1 + 家里9", note: "龙溪谷现代农庄 · 用车7辆" },
     { day: "周六", meal: "晚上", total: 28, parts: "二叔车5 + 大舅4 + 飞机7 + 老爸1 + 俊红1 + 二姨妈1 + 家里9", note: "含浦集市" }
   ],
 
@@ -57,29 +55,46 @@ window.BOARD = {
   hotels: [
     { hotel: "橘籽酒店", rooms: 6, people: ["二叔","二娘","涂径","曹三","孟君孃孃","姑爷","冯小刚","莎莎","五叔","五娘","汪丽","汪丽老公"],
       status: "confirmed", note: "共6间" },
-    { hotel: "十里天池", rooms: 4, people: ["杨华","三娘","四娘","孟菊嬢嬢","二姨妈","霞升爸妈","俊红?"],
-      status: "pending", note: "俊红是否入住待定，房间数需再核对" },
+    { hotel: "十里天池", rooms: 4, people: ["杨华","三娘","四娘","孟菊嬢嬢","二姨妈","霞升爸妈","俊红"],
+      status: "confirmed", note: "含俊红；房间数需再核对" },
     { hotel: "家里", rooms: null, people: ["大舅（沙发）","二姨娘（上铺）"],
       status: "confirmed", note: "大舅睡沙发；二姨娘睡上铺" }
   ],
 
   // ---------- 餐饮 / 菜品 ----------
   catering: [
-    { item: "周六中午 桌餐", detail: "813元 × 3桌", cost: 2439, status: "confirmed", by: "我" },
+    { item: "周六中午 桌餐", detail: "龙溪谷现代农庄 · 813元 × 3桌", cost: 2439, status: "confirmed", by: "我" },
     { item: "麻将台费", detail: "100元", cost: 100, status: "confirmed", by: "我" },
     { item: "茶水米饭", detail: "2元 × 30", cost: 60, status: "confirmed", by: "我" },
     { item: "周六晚上 含浦集市", detail: "已预约，菜品待定", cost: null, status: "pending", by: "我" }
   ],
 
+  // ---------- 周六中午菜单（龙溪谷现代农庄） ----------
+  // 菜品未提供时留空数组，页面显示「菜单待录入」，避免编造。
+  satLunchMenu: {
+    venue: "龙溪谷现代农庄",
+    tables: 3,
+    price: 813,
+    dishes: []   // ← 有菜单后逐条填入，如 "凉拌木耳"
+  },
+
+  // ---------- 周六晚上菜单（含浦集市，待定） ----------
+  satDinnerMenu: {
+    venue: "含浦集市",
+    note: "已预约，菜单待定",
+    dishes: []
+  },
+
   // ---------- 交通 ----------
   transport: [
-    { item: "周六中午用餐出行", detail: "车5辆，载36人", status: "confirmed", by: "二叔车 + 大舅车 + 其余" },
-    { item: "各批接送", detail: "接机7人、自驾接送", status: "pending", by: "" }
+    { item: "周六中午用餐出行", detail: "车7辆，载36人", status: "confirmed", by: "二叔车 + 大舅车 + 其余" },
+    { item: "周五火车站接站", detail: "接二姨妈1人", status: "confirmed", by: "待定" },
+    { item: "周五阳光地铁站接机", detail: "接飞机一行7人（早上8点多到，坐地铁）", status: "confirmed", by: "待定" }
   ],
 
   // ---------- 周六中午接客/用车明细（按座位排） ----------
   satLunchPickup: {
-    totalCars: 5,
+    totalCars: 7,
     totalPeople: 36,
     lines: [
       { car: "二叔开车", n: 5, who: "二叔、五叔、五娘、三娘、四娘" },
@@ -91,7 +106,8 @@ window.BOARD = {
       { car: "俊红",    n: 1, who: "俊红" },
       { car: "二姨妈",  n: 1, who: "二姨妈（朱二姐）" },
       { car: "家里已有", n: 9, who: "家中常驻9人" }
-    ]
+    ],
+    note: "共 7 辆车，载 36 人"
   },
 
   // ---------- 周六当天现场安排（待办） ----------
