@@ -7,7 +7,9 @@ window.BOARD = {
     title: "妈妈60大寿生日宴会",
     subtitle: "周六 10月17日 统筹看板",
     date: "2026年10月17日（周六）",
-    owner: "我"
+    owner: "我",
+    hero: "assets/render.jpg",
+    heroCaption: "现场效果图 · 浅紫仙鹤主题（背板 / 花艺 / 气球 / 灯光）"
   },
 
   // ---------- 顶部人数速览（手填，来自已统计人数） ----------
@@ -23,11 +25,11 @@ window.BOARD = {
   guestGroups: [
     { name: "二叔开车", count: 5, members: ["二叔","五叔","五娘","三娘","四娘"],
       arrive: "周六中午 / 周六晚上", status: "confirmed", note: "" },
-    { name: "大舅一行", count: 4, members: ["大舅等4人"],
+    { name: "大舅一行", count: 4, members: ["大舅","杨华","汪丽","廖三"],
       arrive: "周五中午起 / 全时段", status: "confirmed", note: "" },
     { name: "飞机", count: 7, members: ["冯小刚","莎莎","孟君孃孃","大姑爷","二娘","涂径","曹三"],
       arrive: "周五中午 / 周六中午", status: "confirmed", note: "周五中午即到" },
-    { name: "我伯父", count: 5, members: ["伯父一行5人"],
+    { name: "我伯父", count: 5, members: ["大伯","大伯娘","小姑","大姑","老爸"],
       arrive: "周六中午", status: "confirmed", note: "" },
     { name: "王娟", count: 2, members: ["王娟等2人"],
       arrive: "周六中午", status: "confirmed", note: "" },
@@ -55,10 +57,10 @@ window.BOARD = {
   hotels: [
     { hotel: "橘籽酒店", rooms: 6, people: ["二叔","二娘","涂径","曹三","孟君孃孃","姑爷","冯小刚","莎莎","五叔","五娘","汪丽","汪丽老公"],
       status: "confirmed", note: "共6间" },
-    { hotel: "十里天池", rooms: 4, people: ["三娘","四娘","孟菊嬢嬢","大舅等4人","二姨妈","霞升爸妈","俊红?"],
+    { hotel: "十里天池", rooms: 4, people: ["杨华","三娘","四娘","孟菊嬢嬢","二姨妈","霞升爸妈","俊红?"],
       status: "pending", note: "俊红是否入住待定，房间数需再核对" },
-    { hotel: "家里", rooms: null, people: ["其余人员"],
-      status: "gap", note: "住宿人数待定" }
+    { hotel: "家里", rooms: null, people: ["大舅（沙发）","二姨娘（上铺）"],
+      status: "confirmed", note: "大舅睡沙发；二姨娘睡上铺" }
   ],
 
   // ---------- 餐饮 / 菜品 ----------
@@ -74,6 +76,23 @@ window.BOARD = {
     { item: "周六中午用餐出行", detail: "车5辆，载36人", status: "confirmed", by: "二叔车 + 大舅车 + 其余" },
     { item: "各批接送", detail: "接机7人、自驾接送", status: "pending", by: "" }
   ],
+
+  // ---------- 周六中午接客/用车明细（按座位排） ----------
+  satLunchPickup: {
+    totalCars: 5,
+    totalPeople: 36,
+    lines: [
+      { car: "二叔开车", n: 5, who: "二叔、五叔、五娘、三娘、四娘" },
+      { car: "大舅车",  n: 4, who: "大舅、杨华、汪丽、廖三" },
+      { car: "飞机",    n: 7, who: "冯小刚、莎莎、孟君孃孃、大姑爷、二娘、涂径、曹三" },
+      { car: "伯父",    n: 5, who: "大伯、大伯娘、小姑、大姑、老爸" },
+      { car: "王娟",    n: 2, who: "王娟等2人" },
+      { car: "罗平",    n: 2, who: "罗平等2人" },
+      { car: "俊红",    n: 1, who: "俊红" },
+      { car: "二姨妈",  n: 1, who: "二姨妈（朱二姐）" },
+      { car: "家里已有", n: 9, who: "家中常驻9人" }
+    ]
+  },
 
   // ---------- 周六当天现场安排（待办） ----------
   onsite: [

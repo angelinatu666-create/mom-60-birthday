@@ -88,6 +88,28 @@
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
   .chip{font-size:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;
     padding:3px 10px;color:#4b4363}
+  /* ---------- 首页 Hero（提取效果图配色：浅紫 + 金 + 仙鹤） ---------- */
+  header.hero{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--border);
+    min-height:300px;display:flex;align-items:flex-end;box-shadow:var(--shadow);
+    background:
+      radial-gradient(1200px 400px at 15% -10%, #efe6ff 0%, transparent 60%),
+      linear-gradient(135deg,#f7f3ff 0%,#ede2fb 45%,#e4d6f8 100%)}
+  header.hero .heroimg{position:absolute;inset:0;background-size:cover;background-position:center 30%;
+    opacity:.95}
+  header.hero .scrim{position:absolute;inset:0;
+    background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.78) 38%,rgba(243,239,251,.25) 70%,rgba(243,239,251,0) 100%)}
+  header.hero .hinner{position:relative;z-index:2;padding:30px 34px 26px;max-width:640px}
+  header.hero .crane{font-size:0;line-height:0;margin-bottom:6px}
+  header.hero h1{margin:0;font-size:34px;letter-spacing:1px;color:#3a2f57;
+    font-family:"Songti SC","STSong","PingFang SC",serif;font-weight:700}
+  header.hero .hshu{width:44px;height:3px;border-radius:2px;
+    background:linear-gradient(90deg,#c9a227,#e8cf7a);margin:14px 0 12px}
+  header.hero .hsub{font-size:14px;color:#5c5177;line-height:1.9}
+  header.hero .hsub b{color:#8b5cf6}
+  header.hero .hbadge{position:absolute;top:18px;right:20px;z-index:2;font-size:12px;color:#6b5f8c;
+    background:rgba(255,255,255,.8);border:1px solid var(--border);border-radius:999px;padding:6px 12px;backdrop-filter:blur(6px)}
+  header.hero .hcap{position:absolute;bottom:12px;right:16px;z-index:2;font-size:11.5px;color:#7d719b;
+    background:rgba(255,255,255,.72);border:1px solid var(--border);border-radius:8px;padding:4px 10px}
   footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--border);color:#8b7fa8;font-size:12.5px;
     display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   code{background:var(--surface-2);padding:1px 6px;border-radius:5px;font-size:12px;color:#6b5f8c}
@@ -95,23 +117,26 @@
 </head>
 <body>
 <div class="wrap">
-  <header class="top">
-    <div class="title"><h1 id="m-title"></h1><div class="sub" id="m-sub"></div></div>
-    <div class="stamp">最后更新 · <span id="stamp"></span></div>
-  </header>
+  <header class="hero" id="hero"></header>
   <div class="kpis" id="kpis"></div>
   <nav class="tabs" id="tabs"></nav>
   <main id="panels"></main>
   <footer><span>单文件看板 · 数据在 <code>data.js</code>，改完刷新即可</span>
     <span>家人协作：待办项可在群里接龙</span></footer>
 </div>
-<script src="data.js?v=20261015a"></script>
+<script src="data.js?v=20261015b"></script>
 <script>
 const D = window.BOARD, $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-$('#m-title').textContent = D.meta.title;
-$('#m-sub').innerHTML = D.meta.subtitle+' · <b>'+esc(D.meta.date)+'</b> · 统筹：'+esc(D.meta.owner);
-$('#stamp').textContent = new Date().toLocaleDateString('zh-CN');
+$('#hero').innerHTML = `
+  ${D.meta.hero?`<div class="heroimg" style="background-image:url('${esc(D.meta.hero)}')"></div><div class="scrim"></div>`:''}
+  <span class="hbadge">最后更新 · ${new Date().toLocaleDateString('zh-CN')}</span>
+  <div class="hinner">
+    <h1>${esc(D.meta.title)}</h1>
+    <div class="hshu"></div>
+    <div class="hsub"><b>${esc(D.meta.date)}</b> · ${esc(D.meta.subtitle)} · 统筹：${esc(D.meta.owner)}</div>
+  </div>
+  ${D.meta.hero?`<span class="hcap">${esc(D.meta.heroCaption||'')}</span>`:''}`;
 
 const badge = st => st==='confirmed'?'<span class="badge ok">已定</span>'
   : st==='gap'?'<span class="badge gap">待办</span>':'<span class="badge pd">待定</span>';
@@ -156,8 +181,12 @@ function panelGuests(){
     <ul>${g.members.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>
     <div class="note" style="color:var(--muted)">到达：${esc(g.arrive)}</div>
     ${g.note?`<div class="note">注意：${esc(g.note)}</div>`:''}</div>`;}).join('');
+  const p = D.satLunchPickup;
+  const pl = p ? `<h2 class="sec">周六中午接客用车明细 · ${p.totalCars} 辆 / ${p.totalPeople} 人</h2>
+    <div class="rows">${p.lines.map(l=>`<div class="row"><span class="r-item">${esc(l.car)}</span>
+      <span class="r-qty">${l.n} 人</span><span class="r-by">${esc(l.who)}</span></div>`).join('')}</div>` : '';
   return `<section class="panel on" data-p="guests"><h2 class="sec">迎接客人 · ${D.guestGroups.length} 批</h2>
-    <div class="people">${c}</div></section>`;
+    <div class="people">${c}</div>${pl}</section>`;
 }
 function panelMeals(){
   const c = D.meals.map(m=>`<div class="meal">
