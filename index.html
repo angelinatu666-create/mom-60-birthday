@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>妈妈60大寿 · 统筹看板</title>
+<style>
+  :root{
+    --bg:#0f1115; --surface:#171a21; --surface-2:#1e222b; --ink:#eef1f6;
+    --muted:#8b93a7; --border:#262b36; --accent:#e03a3a; --accent-2:#e8b23a;
+    --ok:#3fb950; --warn:#e8b23a; --gap:#e0563a; --radius:14px;
+    --shadow:0 8px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.55;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 20px 80px}
+  header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:18px}
+  .title h1{margin:0;font-size:26px;letter-spacing:-.3px}
+  .title .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  .title .sub b{color:var(--accent-2);font-weight:600}
+  .stamp{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 12px;
+    border-radius:999px;background:var(--surface);white-space:nowrap}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0 8px}
+  .kpi{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden}
+  .kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+  .kpi.gold:before{background:var(--accent-2)}
+  .kpi .k{font-size:12px;color:var(--muted);letter-spacing:.4px}
+  .kpi .v{font-size:27px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+  .kpi .v small{font-size:13px;color:var(--muted);font-weight:500}
+  .kpi .d{font-size:12px;color:var(--muted);margin-top:2px}
+  nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:26px 0 18px;position:sticky;top:0;z-index:20;
+    background:linear-gradient(180deg,var(--bg) 70%,transparent);padding:10px 0 12px}
+  nav.tabs button{background:var(--surface);color:var(--muted);border:1px solid var(--border);
+    padding:9px 16px;border-radius:999px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:.15s}
+  nav.tabs button:hover{color:var(--ink);border-color:#39404f}
+  nav.tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  section.panel{display:none}
+  section.panel.on{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2.sec{font-size:15px;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;
+    margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+  h2.sec:after{content:"";flex:1;height:1px;background:var(--border)}
+  .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px}
+  .person{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;transition:.15s}
+  .person:hover{border-color:#39404f;transform:translateY(-1px)}
+  .person .who{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;margin-bottom:10px}
+  .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  .dot.ok{background:var(--ok)} .dot.pd{background:var(--warn)}
+  .person ul{margin:0;padding:0;list-style:none}
+  .person li{font-size:13.5px;color:#cfd6e4;padding:3px 0 3px 14px;position:relative}
+  .person li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;
+    background:var(--accent-2);opacity:.7}
+  .person .note{margin-top:8px;font-size:12px;color:var(--gap)}
+  .rows{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--border);font-size:14px}
+  .row:last-child{border-bottom:none}
+  .row .r-item{font-weight:600;min-width:130px}
+  .row .r-qty{color:var(--accent-2);font-variant-numeric:tabular-nums;min-width:150px}
+  .row .r-by{color:var(--muted);font-size:13px;flex:1}
+  .badge{font-size:11.5px;padding:2px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
+  .badge.ok{background:rgba(63,185,80,.15);color:var(--ok)}
+  .badge.pd{background:rgba(232,178,58,.15);color:var(--warn)}
+  .badge.gap{background:rgba(224,86,58,.15);color:var(--gap)}
+  .meal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+  .meal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+  .meal .mtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .meal .mday{font-size:13px;color:var(--muted)}
+  .meal .mtot{font-size:26px;font-weight:700;color:var(--accent-2);font-variant-numeric:tabular-nums}
+  .meal .mparts{font-size:12.5px;color:#b9c2d4;margin-top:8px;line-height:1.7}
+  .meal .mnote{font-size:12px;color:var(--warn);margin-top:6px}
+  .fin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:20px}
+  .fin{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .fin .k{font-size:12.5px;color:var(--muted)}
+  .fin .v{font-size:30px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+  .fin.big .v{font-size:36px;color:var(--accent-2)}
+  .tbd{color:var(--warn);font-size:12.5px}
+  .empty{color:var(--muted);font-size:13.5px;border:1px dashed var(--border);border-radius:var(--radius);
+    padding:22px;text-align:center;background:rgba(255,255,255,.01)}
+  .hotel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .hotel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+  .hotel .htop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .hotel .hname{font-weight:600;font-size:16px}
+  .hotel .hrooms{font-size:13px;color:var(--accent-2);margin-top:4px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font-size:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;
+    padding:3px 10px;color:#cfd6e4}
+  footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--border);color:#5b6478;font-size:12.5px;
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  code{background:var(--surface-2);padding:1px 6px;border-radius:5px;font-size:12px;color:#a9b3c7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="title"><h1 id="m-title"></h1><div class="sub" id="m-sub"></div></div>
+    <div class="stamp">最后更新 · <span id="stamp"></span></div>
+  </header>
+  <div class="kpis" id="kpis"></div>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="panels"></main>
+  <footer><span>单文件看板 · 数据在 <code>data.js</code>，改完刷新即可</span>
+    <span>家人协作：待办项可在群里接龙</span></footer>
+</div>
+<script src="data.js?v=20261015a"></script>
+<script>
+const D = window.BOARD, $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('#m-title').textContent = D.meta.title;
+$('#m-sub').innerHTML = D.meta.subtitle+' · <b>'+esc(D.meta.date)+'</b> · 统筹：'+esc(D.meta.owner);
+$('#stamp').textContent = new Date().toLocaleDateString('zh-CN');
+
+const badge = st => st==='confirmed'?'<span class="badge ok">已定</span>'
+  : st==='gap'?'<span class="badge gap">待办</span>':'<span class="badge pd">待定</span>';
+
+// KPI 自动汇总
+(function(){
+  const hc = D.headcount;
+  const guests = D.guestGroups.reduce((a,g)=>a+(+g.count||0),0);
+  const rooms = D.hotels.reduce((a,h)=>a+(+h.rooms||0),0);
+  const gapN = D.onsite.filter(o=>o.status==='gap').length
+             + D.hotels.filter(h=>h.status==='gap').length;
+  const f = D.finance;
+  const spent = (f.spent||[]).reduce((a,b)=>a+((+b.unit||0)*(+b.qty||0)),0);
+  const k = [
+    {k:'周六中午', v:hc.satLunch, u:'人', d:'另：周五 中午'+hc.friLunch+' + 晚'+hc.friDinner+' 人次'},
+    {k:'周六晚上', v:hc.satDinner, u:'人', d:'含浦集市聚餐'},
+    {k:'迎接批次', v:D.guestGroups.length, u:'批', d:guests+' 人次统计'},
+    {k:'住宿房间', cls:'gold', v:rooms, u:'间', d:'橘籽6 + 十里天池4'},
+    {k:'待办缺口', v:gapN, u:'项', d:'现场安排 + 住宿待定'}
+  ];
+  $('#kpis').innerHTML = k.map(x=>`<div class="kpi ${x.cls||''}"><div class="k">${esc(x.k)}</div>
+    <div class="v">${esc(x.v)}<small> ${esc(x.u)}</small></div><div class="d">${esc(x.d)}</div></div>`).join('');
+})();
+
+const TABS=[
+  {id:'guests', label:'迎接客人'},
+  {id:'meals',  label:'餐次人数'},
+  {id:'hotel',  label:'住宿安排'},
+  {id:'cater',  label:'餐饮/交通'},
+  {id:'onsite', label:'现场待办'},
+  {id:'money',  label:'费用'}
+];
+$('#tabs').innerHTML = TABS.map((t,i)=>`<button data-t="${t.id}" class="${i===0?'on':''}">${t.label}</button>`).join('');
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('section.panel').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.t));});
+
+function panelGuests(){
+  const c = D.guestGroups.map(g=>{const ok=g.status==='confirmed';return `<div class="person">
+    <div class="who"><span class="dot ${ok?'ok':'pd'}"></span>${esc(g.name)}
+      <span class="badge ${ok?'ok':'pd'}" style="margin-left:auto">${g.count} 人</span></div>
+    <ul>${g.members.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>
+    <div class="note" style="color:var(--muted)">到达：${esc(g.arrive)}</div>
+    ${g.note?`<div class="note">注意：${esc(g.note)}</div>`:''}</div>`;}).join('');
+  return `<section class="panel on" data-p="guests"><h2 class="sec">迎接客人 · ${D.guestGroups.length} 批</h2>
+    <div class="people">${c}</div></section>`;
+}
+function panelMeals(){
+  const c = D.meals.map(m=>`<div class="meal">
+    <div class="mtop"><span class="mday">${esc(m.day)} · ${esc(m.meal)}</span><span class="mtot">${esc(m.total)}人</span></div>
+    <div class="mparts">${esc(m.parts)}</div>${m.note?`<div class="mnote">${esc(m.note)}</div>`:''}</div>`).join('');
+  return `<section class="panel" data-p="meals"><h2 class="sec">各餐次人数构成</h2><div class="meal-grid">${c}</div></section>`;
+}
+function panelHotel(){
+  const c = D.hotels.map(h=>{const ok=h.status==='confirmed';return `<div class="hotel">
+    <div class="htop"><span class="hname">${esc(h.hotel)}</span>${badge(h.status)}</div>
+    <div class="hrooms">${h.rooms==null?'房间数待定':'共 '+h.rooms+' 间'}</div>
+    <div class="chips">${(h.people||[]).map(p=>`<span class="chip">${esc(p)}</span>`).join('')}</div>
+    ${h.note?`<div class="note" style="margin-top:10px;font-size:12px;color:var(--gap)">${esc(h.note)}</div>`:''}</div>`;}).join('');
+  return `<section class="panel" data-p="hotel"><h2 class="sec">住宿安排</h2><div class="hotel-grid">${c}</div></section>`;
+}
+function panelCater(){
+  const cat = D.catering.map(x=>`<div class="row"><span class="r-item">${esc(x.item)}</span>
+    <span class="r-qty">${x.cost==null?'<span class="tbd">金额待定</span>':esc(x.cur||'¥')+esc(x.cost)}</span>
+    <span class="r-by">${esc(x.detail||'')}</span>${badge(x.status)}</div>`).join('');
+  const tr = D.transport.map(x=>`<div class="row"><span class="r-item">${esc(x.item)}</span>
+    <span class="r-qty">${esc(x.detail||'')}</span><span class="r-by">${x.by?'车：'+esc(x.by):''}</span>${badge(x.status)}</div>`).join('');
+  return `<section class="panel" data-p="cater"><h2 class="sec">餐饮 / 菜品</h2><div class="rows">${cat}</div>
+    <h2 class="sec">交通</h2><div class="rows">${tr}</div></section>`;
+}
+function panelOnsite(){
+  const rows = D.onsite.map(o=>`<div class="row"><span class="r-item">${esc(o.item)}</span>
+    <span class="r-qty">${o.by?'负责人：'+esc(o.by):'<span class="tbd">负责人待定</span>'}</span>
+    <span class="r-by">${esc(o.note||'')}</span>${badge(o.status)}</div>`).join('');
+  return `<section class="panel" data-p="onsite"><h2 class="sec">周六当天现场安排</h2><div class="rows">${rows}</div></section>`;
+}
+function panelMoney(){
+  const f = D.finance;
+  const spent = (f.spent||[]).reduce((a,b)=>a+((+b.unit||0)*(+b.qty||0)),0);
+  const tbdN = (f.spent||[]).filter(x=>x.unit==null).length;
+  const det = (f.spent||[]).map(x=>{const line=x.unit==null?'<span class="tbd">单价待补</span>':'¥'+(x.unit*x.qty);
+    return `<div class="row"><span class="r-item">${esc(x.item)}</span>
+    <span class="r-qty">${x.unit==null?'':'¥'+x.unit+' × '+x.qty+' = '}${line}</span>
+    <span class="r-by">${esc(x.note||'')}</span></div>`;}).join('');
+  return `<section class="panel" data-p="money"><h2 class="sec">费用总览</h2>
+    <div class="fin-grid">
+      <div class="fin"><div class="k">总预算</div><div class="v">${f.budget==null?'—':f.currency+f.budget}</div>
+        <div class="k" style="margin-top:6px">未提供，待补</div></div>
+      <div class="fin big"><div class="k">已发生支出</div><div class="v">¥${spent}</div>
+        ${tbdN?`<div class="k" style="margin-top:6px">含 ${tbdN} 项待补价</div>`:''}</div>
+      <div class="fin"><div class="k">住宿费</div><div class="v">¥${85*12}</div><div class="k" style="margin-top:6px">85 × 12 间</div></div>
+    </div>
+    <h2 class="sec">支出明细</h2><div class="rows">${det}</div></section>`;
+}
+$('#panels').innerHTML = panelGuests()+panelMeals()+panelHotel()+panelCater()+panelOnsite()+panelMoney();
+</script>
+</body>
+</html>
