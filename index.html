@@ -97,6 +97,11 @@
   .dish{font-size:13px;background:linear-gradient(135deg,#f7f3ff,#ede2fb);border:1px solid var(--border);
     border-radius:10px;padding:6px 12px;color:#4b4363}
   .empty-menu{display:block;font-size:13px;color:var(--muted)}
+  .menu-form{display:inline-block;margin-top:14px;text-decoration:none;color:#7d719b;font-size:12px}
+  .menu-form img{display:block;width:120px;border-radius:8px;border:1px solid var(--border);
+    box-shadow:var(--shadow);margin-bottom:6px}
+  .menu-form span{display:block}
+  .menu-form:hover img{border-color:var(--accent)}
   /* ---------- 首页 Hero（提取效果图配色：浅紫 + 金 + 仙鹤） ---------- */
   header.hero{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--border);
     min-height:300px;display:flex;align-items:flex-end;box-shadow:var(--shadow);
@@ -133,7 +138,7 @@
   <footer><span>单文件看板 · 数据在 <code>data.js</code>，改完刷新即可</span>
     <span>家人协作：待办项可在群里接龙</span></footer>
 </div>
-<script src="data.js?v=20261015c"></script>
+<script src="data.js?v=20261015d"></script>
 <script>
 const D = window.BOARD, $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -157,7 +162,7 @@ const badge = st => st==='confirmed'?'<span class="badge ok">已定</span>'
   const rooms = D.hotels.reduce((a,h)=>a+(+h.rooms||0),0);
   const gapN = D.onsite.filter(o=>o.status==='gap').length
              + D.hotels.filter(h=>h.status==='gap').length
-             + [D.satLunchMenu,D.satDinnerMenu].filter(m=>m && (!m.dishes || !m.dishes.length)).length;
+             + [D.friLunchMenu,D.friDinnerMenu,D.satLunchMenu,D.satDinnerMenu].filter(m=>m && (!m.dishes || !m.dishes.length)).length;
   const f = D.finance;
   const spent = (f.spent||[]).reduce((a,b)=>a+((+b.unit||0)*(+b.qty||0)),0);
   const k = [
@@ -224,13 +229,16 @@ function panelCater(){
     const body = (m.dishes && m.dishes.length)
       ? `<div class="dishes">${m.dishes.map(d=>`<span class="dish">${esc(d)}</span>`).join('')}</div>`
       : `<div class="dishes empty-menu"><span class="tbd">菜单待录入</span>${m.note?' · '+esc(m.note):''}</div>`;
-    const head = `${esc(m.venue)}${m.tables?' · '+m.tables+'桌':''}${m.price?' · '+m.price+'元/桌':''}`;
+    const head = `${esc(m.venue)}${m.tables?' · '+m.tables+'桌':''}${m.price?' · '+m.price+'元/桌':''}${m.dishes&&m.dishes.length?' · '+m.dishes.length+'道':''}`;
+    const img = m.formImg?`<a class="menu-form" href="${esc(m.formImg)}" target="_blank"><img src="${esc(m.formImg)}" alt="点菜单" loading="lazy"><span>查看原始点菜单 ↗</span></a>`:'';
     return `<h2 class="sec">${title}</h2>
-      <div class="menu-card"><div class="menu-head">${head}</div>${body}</div>`;
+      <div class="menu-card"><div class="menu-head">${head}</div>${body}${img}</div>`;
   };
 
   return `<section class="panel" data-p="cater"><h2 class="sec">餐饮 / 菜品</h2><div class="rows">${cat}</div>
     <h2 class="sec">交通 / 接送</h2><div class="rows">${tr}</div>
+    ${menuBlock(D.friLunchMenu,'周五中午菜单')}
+    ${menuBlock(D.friDinnerMenu,'周五晚上菜单')}
     ${menuBlock(D.satLunchMenu,'周六中午菜单')}
     ${menuBlock(D.satDinnerMenu,'周六晚上菜单')}</section>`;
 }
