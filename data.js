@@ -66,7 +66,7 @@ window.BOARD = {
     { item: "周六中午 桌餐", detail: "龙溪谷现代农庄 · 813元 × 3桌", cost: 2439, status: "confirmed", by: "我" },
     { item: "麻将台费", detail: "100元", cost: 100, status: "confirmed", by: "我" },
     { item: "茶水米饭", detail: "2元 × 30", cost: 60, status: "confirmed", by: "我" },
-    { item: "周六晚上 含浦集市", detail: "已预约，菜品待定", cost: null, status: "pending", by: "我" }
+    { item: "周六晚上 含浦集市", detail: "含浦集市 · 10人餐套餐 661元 × 3桌", cost: 1983, status: "confirmed", by: "我" }
   ],
 
   // ---------- 周五菜单（在家用餐·暂定） ----------
@@ -90,11 +90,16 @@ window.BOARD = {
     dishes: ["黄鸭叫","霸王别姬","大闸蟹","黑山羊炖萝卜","基围虾","柠檬鸡爪","卤菜（猪耳朵、肚子、芯）","小炒黄牛肉","蔬菜"]
   },
 
-  // ---------- 周六晚上菜单（含浦集市，待定） ----------
+  // ---------- 周六晚上菜单（含浦集市套餐） ----------
   satDinnerMenu: {
     venue: "含浦集市",
-    note: "已预约，菜单待定",
-    dishes: []
+    tables: 3,
+    price: 661,
+    formImg: "assets/menu-hanpu.jpg",
+    package: "10人餐套餐 · 清凉一夏",
+    dishes: ["蒜蓉罗氏虾(配捞面)","集市炒土鸡","茶油生炒牛肉","黄焖有机雄鱼","柴火焖老甲鱼","白辣椒捆鸡","爆炒紫苏牛蛙","擂辣椒皮蛋",
+             "本地特色2选1：虎皮香猪肉 / 炒乡里腊肉","素菜2选1：每日例汤 / 蒜香排骨薯条",
+             "猪油炒小菜","醉香米粑","绿豆汁(大)","茶水米饭"]
   },
 
   // ---------- 交通 ----------
@@ -140,7 +145,7 @@ window.BOARD = {
       { item: "麻将台费",      unit: 100, qty: 1, cur: "CNY" },
       { item: "茶水米饭",      unit: 2,   qty: 30, cur: "CNY" },
       { item: "住宿费",        unit: 85,  qty: 12, cur: "CNY" },
-      { item: "周六晚上 含浦集市", unit: null, qty: 1, cur: "CNY", note: "菜品待定，金额未知" }
+      { item: "周六晚上 含浦集市", unit: 661, qty: 3, cur: "CNY", note: "10人餐套餐" }
     ]
   }
 };

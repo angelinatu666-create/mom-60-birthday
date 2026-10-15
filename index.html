@@ -93,6 +93,8 @@
     box-shadow:var(--shadow)}
   .menu-head{font-size:13.5px;color:#5c5177;font-weight:600;margin-bottom:12px;
     padding-bottom:10px;border-bottom:1px dashed var(--border)}
+  .menu-pkg{font-weight:400;font-size:12.5px;color:#8b7fa8;margin-top:5px}
+  .dishes .dish:nth-child(9),.dishes .dish:nth-child(10){background:linear-gradient(135deg,#fff8e8,#fdf0cf);border-color:#eddba8;color:#7a6320}
   .dishes{display:flex;flex-wrap:wrap;gap:8px}
   .dish{font-size:13px;background:linear-gradient(135deg,#f7f3ff,#ede2fb);border:1px solid var(--border);
     border-radius:10px;padding:6px 12px;color:#4b4363}
@@ -138,7 +140,7 @@
   <footer><span>单文件看板 · 数据在 <code>data.js</code>，改完刷新即可</span>
     <span>家人协作：待办项可在群里接龙</span></footer>
 </div>
-<script src="data.js?v=20261015d"></script>
+<script src="data.js?v=20261015e"></script>
 <script>
 const D = window.BOARD, $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -230,9 +232,10 @@ function panelCater(){
       ? `<div class="dishes">${m.dishes.map(d=>`<span class="dish">${esc(d)}</span>`).join('')}</div>`
       : `<div class="dishes empty-menu"><span class="tbd">菜单待录入</span>${m.note?' · '+esc(m.note):''}</div>`;
     const head = `${esc(m.venue)}${m.tables?' · '+m.tables+'桌':''}${m.price?' · '+m.price+'元/桌':''}${m.dishes&&m.dishes.length?' · '+m.dishes.length+'道':''}`;
+    const pkg = m.package?`<div class="menu-pkg">${esc(m.package)}</div>`:'';
     const img = m.formImg?`<a class="menu-form" href="${esc(m.formImg)}" target="_blank"><img src="${esc(m.formImg)}" alt="点菜单" loading="lazy"><span>查看原始点菜单 ↗</span></a>`:'';
     return `<h2 class="sec">${title}</h2>
-      <div class="menu-card"><div class="menu-head">${head}</div>${body}${img}</div>`;
+      <div class="menu-card"><div class="menu-head">${head}${pkg}</div>${body}${img}</div>`;
   };
 
   return `<section class="panel" data-p="cater"><h2 class="sec">餐饮 / 菜品</h2><div class="rows">${cat}</div>
